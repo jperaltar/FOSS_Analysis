@@ -7,8 +7,8 @@ from django.db import models
 class Contributor(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128, null=True)
-    login = models.CharField(max_length=128, null=True)
-    email = models.EmailField(max_length=128, null=True)
+    login = models.CharField(max_length=128, null=True, unique=True)
+    email = models.EmailField(max_length=128, null=True, unique=True)
     type = models.CharField(max_length=128, null=True)
 
 class Project(models.Model):

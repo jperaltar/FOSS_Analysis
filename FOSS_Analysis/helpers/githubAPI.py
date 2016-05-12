@@ -29,6 +29,13 @@ class GithubProject(object):
             headers=headers, auth=(reqUser, reqToken)).content)
 
     def getContributors(self):
+        contributors = []
         url = apiUrl + 'repos/' + self.user + '/' + self.repo + '/contributors'
-        return json.loads(requests.get(url,
+        response = json.loads(requests.get(url,
             headers=headers, auth=(reqUser, reqToken)).content)
+
+        for item in response:
+            contributors.append(json.loads(requests.get(item['url'],
+                headers=headers, auth=(reqUser, reqToken)).content))
+
+        return contributors
