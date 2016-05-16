@@ -7,6 +7,7 @@ License and copyright parser, using the scancode toolkit
 
 import sys
 import os
+import re
 import subprocess
 import json
 from scancode.src.scancode import api as scancode
@@ -43,14 +44,19 @@ def readFile(location):
 
 def getBlame(repo, file):
     authors = {}
-    blame = repo.git.blame('-e', file)
-    for line in blame.split('\n'):
-        if line != "":
-            author = line.split('<')[1].split('>')[0]
-            if author in authors:
-                authors[author] = authors[author] + 1
-            else:
-                authors[author] = 1
+    blame = repo.git.blame('--line-porcelain', file)
+    prog = re.compile(r'author .*\nauthor-mail.*', re.MULTILINE)
+    lines = prog.findall(blame)
+    for line in lines:
+        author = str(line.split('author ')[1].split('\n')[0])
+        if authors.has_key(author):
+            authors[author]['lines'] = authors[author]['lines'] + 1
+        else:
+            email = str(line.split('author-mail <')[1].split('>')[0])
+            authors[author] = {}
+            authors[author]['email'] = email
+            authors[author]['lines'] = 1
+
     return authors
 
 def scan(repo, scans, location):
