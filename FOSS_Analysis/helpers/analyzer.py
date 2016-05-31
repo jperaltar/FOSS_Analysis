@@ -67,12 +67,11 @@ def scan(repo, scans, location):
 
     try:
         authors = getBlame(repo, location)
-    except UnicodeDecodeError as err:
+        content = readFile(location)
+    except:
         authors = {}
-        print "Non utf-8 file. Cannot get blame"
+        print "Non utf-8 file, " + fileName + "."
         return 0
-
-    content = readFile(location)
 
     startTime = time.time()
     try:
@@ -88,13 +87,12 @@ def scan(repo, scans, location):
 
     print "Done -- " + fileName + " time: " + str(time.time() - startTime)
 
-    scans.append({
-        'path': location,
+    scans[location] = {
         'language': language,
         'copyrights': copyrights,
         'licenses': licenses,
         'authors': authors
-    })
+    }
 
     return 1
 
@@ -109,10 +107,10 @@ def getFiles(folder, files):
             elif os.path.isdir(localPath):
                 getFiles(localPath, files)
 
-def scanFolder(repo, location, scans):
+def scanFolder(repo, location):
     jobs = []
     manager = Manager()
-    scans = manager.list()
+    scans = manager.dict()
     pool = Pool(2)
 
     startTime = time.time()

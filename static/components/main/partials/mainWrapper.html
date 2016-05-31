@@ -1,0 +1,10 @@
+<div ng-controller='MainController as MainCtrl'>
+  <div id="header">
+    <navbar></navbar>
+  </div>
+  <div id="body" class="container-fluid">
+    <analysis ng-show="MainCtrl.isSelected(1)"></analysis>
+    <statistics ng-show="MainCtrl.isSelected(2)"></statistics>
+    <help ng-show="MainCtrl.isSelected(3)"></help>
+  </div>
+</div>

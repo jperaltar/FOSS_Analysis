@@ -1,0 +1,85 @@
+<div ng-controller="AnalysisController as AnalysisCtrl">
+  <div class="container-fluid row">
+    <h3>You've got three ways of analizing your project</h3>
+    <div class="col-md-4">
+      <h4>With a Github project URL</h4>
+      <form id="urlForm" ng-submit="AnalysisCtrl.analyze()">
+        <input id="url" name="url" ng-model="AnalysisCtrl.url">
+        <input type="submit" value="Analyze" class="btn btn-primary">
+      </form>
+    </div>
+    <div class="col-md-4">
+      <h4>Specifying your username and project name in Github</h4>
+    </div>
+    <div class="col-md-4">
+      <h4>Draggin your project folder directly over here</h4>
+    </div>
+  </div>
+  <div class="statistics">
+    <div class="container-fluid row">
+      <percentage></percentage>
+    </div>
+    <div class="container-fluid row">
+      <div class="col-md-6">
+        <chart type="'bar'" graph-data="contributors" graph-width="380" graph-height="200">
+          <svg></svg>
+        </chart>
+      </div>
+      <div class="col-md-3">
+        <chart type="'pie'" graph-data="licenses" graph-width="190" graph-height="200">
+          <svg></svg>
+        </chart>
+      </div>
+      <div class="col-md-3">
+        <chart type="'pie'" graph-data="copyrights" graph-width="190" graph-height="200">
+          <svg></svg>
+        </chart>
+      </div>
+    </div>
+    <div class="container-fluid row">
+      <div class="col-md-4">
+        Owner: {{owner}}
+      </div>
+      <div class="col-md-4">
+        Github url: {{url}}
+      </div>
+      <div class="col-md-4">
+        Number of files: {{num_files}}
+      </div>
+    </div>
+    <div class="container-fluid row">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Language</th>
+            <th>Authors</th>
+            <th>Licenses</th>
+            <th>Copyrights</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(key, value) in files">
+            <td>{{key}}</td>
+            <td>{{value.language}}</td>
+            <td>
+              <ul>
+                <li ng-repeat="author in value.authors">{{author.email}}</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li ng-repeat="license in value.licenses">{{license.short_name}}</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li ng-repeat="copyright in value.copyrights">{{copyright[0]}}</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

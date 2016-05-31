@@ -1,0 +1,20 @@
+<div id="navbar-container">
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">FOSS Analysis</a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right" id="navbar-list">
+        <li ng-class="{active: MainCtrl.isSelected(1)}"><a ng-click="MainCtrl.setTab(1)">ANÁLISIS</a></li>
+        <li ng-class="{active: MainCtrl.isSelected(2)}"><a ng-click="MainCtrl.setTab(2)">ESTADISTICAS</a></li>
+        <li ng-class="{active: MainCtrl.isSelected(3)}"><a ng-click="MainCtrl.setTab(3)">AYUDA</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
