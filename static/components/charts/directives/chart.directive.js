@@ -4,42 +4,54 @@
     [function () {
       var link = function (scope, element) {
         var chart;
+
         scope.$watch('graphData', function (graphData) {
           //Using nvd3 library to create bars chart
           var svg = element.find('svg');
 
           var update = function() {
-            d3.select(svg[0])
-              .datum(graphData)
-              .call(chart);
+            if (chart) {
+              d3.select(svg[0])
+                .attr("width", scope.graphWidth)
+                .attr("height", scope.graphHeight)
+                .datum(graphData)
+                .call(chart);
+            }
           }
 
           scope.$on('chartinit', update);
 
-          nv.addGraph(function () {
-            switch (scope.type) {
-              case 'bar':
-                chart = nv.models.discreteBarChart()
-                  .x(function(d) { return d.label })
-                  .y(function(d) { return d.value })
-                  .staggerLabels(true)
-                  .showValues(false);
-                break;
-              case 'pie':
-                chart = nv.models.pieChart()
-                  .x(function(d) { return d.label })
-                  .y(function(d) { return d.value })
-                  .showLegend(false)
-                  .showLabels(false);
-                break;
-              default:
-                chart = nv.models.discreteBarChart();
-            }
-
-            nv.utils.windowResize(chart.update);
-
-            scope.$emit('chartinit');
-          });
+          function addGraph() {
+            nv.addGraph(function () {
+              switch (scope.type) {
+                case 'bar':
+                  graphData = [{
+                    key: 'Cumulative Return',
+                    values: graphData
+                  }];
+                  console.log('BAR CHART');
+                  console.log(graphData);
+                  chart = nv.models.discreteBarChart()
+                    .x(function(d) { return d.label })
+                    .y(function(d) { return d.value })
+                    .staggerLabels(true)
+                    .showValues(false);
+                  scope.$emit('chartinit');
+                  break;
+                case 'pie':
+                  console.log('PIE CHART');
+                  console.log(graphData);
+                  chart = nv.models.pieChart()
+                    .x(function(d) { return d.label })
+                    .y(function(d) { return d.value })
+                    .showLegend(false)
+                    .showLabels(false);
+                  scope.$emit('chartinit');
+                  break;
+              }
+            });
+          }
+          addGraph();
         }, true);
 
         return chart;

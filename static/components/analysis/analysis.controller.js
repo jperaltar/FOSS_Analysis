@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   angular.module('analysis')
-    .controller('AnalysisController', ['$scope', 'AnalysisService', 'StatisticsService',
-      function ($scope, AnalysisService, StatisticsService) {
+    .controller('AnalysisController', ['$scope', 'ApiService', 'StatisticsService',
+      function ($scope, ApiService, StatisticsService) {
         $scope.contributors = [];
         $scope.licenses = [];
         $scope.copyrights = [];
@@ -12,7 +12,7 @@
         $scope.files = {};
 
         this.analyze = function () {
-          AnalysisService.analyze(this.url)
+          ApiService.post('/analyze', {'url': this.url})
             .then(function (data) {
               $scope.files = data['files'];
               $scope.owner = data['owner'];
@@ -26,20 +26,13 @@
                 auxLicenses = StatisticsService.addLicenses(auxLicenses, data['files'][file]);
                 auxCopyrights = StatisticsService.addCopyrights(auxCopyrights, data['files'][file]);
               }
-              $scope.contributors = getDataFormat(auxContrib);
+              $scope.contributors = auxContrib;
               $scope.licenses = auxLicenses;
               $scope.copyrights = auxCopyrights;
             })
             .catch(function (err) {
               console.log(err);
             });
-        }
-
-        function getDataFormat(data) {
-          return [{
-            key: 'Cumulative Return',
-            values: data
-          }];
         }
       }
     ]);

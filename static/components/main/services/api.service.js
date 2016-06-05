@@ -1,21 +1,22 @@
 (function () {
   'use strict';
-  angular.module('analysis')
-    .factory('AnalysisService', ['$http', '$q',
+  angular.module('main')
+    .factory('ApiService', ['$http', '$q',
       function ($http, $q) {
         var service = {};
 
-        service.analyze = function (url) {
+        service.post = function (url, data) {
+          console.log(data);
+          $('chart > *').remove();
+          $('chart').append('<svg></svg>');
           var deferred = $q.defer();
           $http({
             method: 'POST',
-            url: '/analyze',
+            url: url,
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             },
-            data: {
-              url: url
-            }
+            data: data
           }).success(function (response) {
             console.log('SUCCESS');
             deferred.resolve(response);

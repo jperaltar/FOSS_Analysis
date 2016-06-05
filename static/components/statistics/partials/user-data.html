@@ -1,0 +1,29 @@
+<div class="data">
+  <div class="container-fluid row">
+    <div class="col-md-6">
+      <chart type="'pie'" graph-data="languages" graph-width="190" graph-height="200">
+        <svg></svg>
+      </chart>
+    </div>
+    <div class="col-md-6">
+      <h4>Projects with the user as contributor</h4>
+      <ul>
+        <li ng-repeat="project in projects">
+          {{project}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid row">
+    <div class="col-md-6">
+      <chart type="'pie'" graph-data="licenses" graph-width="190" graph-height="200">
+        <svg></svg>
+      </chart>
+    </div>
+    <div class="col-md-6">
+      <chart type="'pie'" graph-data="copyrights" graph-width="190" graph-height="200">
+        <svg></svg>
+      </chart>
+    </div>
+  </div>
+</div>

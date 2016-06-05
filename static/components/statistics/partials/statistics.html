@@ -1,0 +1,49 @@
+<div ng-controller="StatisticsController as StatisticsCtrl">
+  <div class="container-fluid row">
+    <h3>Show statistics of our projects and filter them as you want</h3>
+    <div class="col-md-4">
+      <h4>Filter by user</h4>
+      <!-- <form id="userFilter" ng-submit="StatisticsCtrl.analyze()">
+        <input id="user" name="user" ng-model="StatisticsCtrl.user">
+        <input type="submit" value="Filter" class="btn btn-primary">
+      </form> -->
+    </div>
+    <div class="col-md-4">
+      <h4>Filter by user</h4>
+      <form id="byUser" ng-submit="StatisticsCtrl.getByUser()">
+        <input id="user" name="user" ng-model="StatisticsCtrl.user">
+        <input type="submit" value="Get stats" class="btn btn-primary">
+      </form>
+    </div>
+    <div class="col-md-4">
+      <h4>Get global statistics</h4>
+      <form id="all" ng-submit="StatisticsCtrl.getAll()">
+        <input type="submit" value="Get all" class="btn btn-primary">
+      </form>
+    </div>
+  </div>
+  <div class="data">
+    <div class="container-fluid row">
+      <div class="col-md-3">
+        <chart type="'bar'" graph-data="languages" graph-width="190" graph-height="200">
+          <svg></svg>
+        </chart>
+      </div>
+      <div class="col-md-3">
+        <chart type="'bar'" graph-data="contributors" graph-width="190" graph-height="200">
+          <svg></svg>
+        </chart>
+      </div>
+      <div class="col-md-3">
+        <chart type="'bar'" graph-data="licenses" graph-width="190" graph-height="200">
+          <svg></svg>
+        </chart>
+      </div>
+      <div class="col-md-3">
+        <chart class="pie-chart" type="'pie'" graph-data="copyrights" graph-width="190" graph-height="200">
+          <svg></svg>
+        </chart>
+      </div>
+    </div>
+  </div>
+</div>

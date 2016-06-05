@@ -2,7 +2,7 @@
   'use strict';
 
   var appName = 'FOSS_Analysis';
-  var app = angular.module(appName, ['ngRoute', 'main', 'analysis']);
+  var app = angular.module(appName, ['ngRoute', 'main', 'statistics', 'analysis']);
 
   app.config(['$locationProvider',
     function ($locationProvider) {
