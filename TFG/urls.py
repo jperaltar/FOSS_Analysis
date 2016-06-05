@@ -20,5 +20,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', 'FOSS_Analysis.views.main'),
-    url(r'^analyze$', 'FOSS_Analysis.views.analyze')
+    url(r'^analyze$', 'FOSS_Analysis.views.analyze'),
+    url(r'^all$', 'FOSS_Analysis.views.all'),
+    url(r'^user$', 'FOSS_Analysis.views.user')
 ]

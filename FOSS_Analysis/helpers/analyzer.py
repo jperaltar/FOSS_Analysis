@@ -14,7 +14,6 @@ from scancode.src.scancode import api as scancode
 from scancode.src.licensedcode import detect as licenseDetect
 from scancode.src.licensedcode import models as licenseModels
 from pygments.lexers import guess_lexer, guess_lexer_for_filename
-import magic
 from git import Repo
 from multiprocessing import Process, Manager, Pool
 import time
@@ -79,20 +78,23 @@ def scan(repo, scans, location):
     except:
         language = ''
 
-    copyrights = scancode.get_copyrights(content)
-    print "Copyrights -- " + fileName
+    try:
+        copyrights = scancode.get_copyrights(content)
+        print "Copyrights -- " + fileName
 
-    licenses = scancode.get_licenses(content, _INDEX, _LICENSES_BY_KEY)
-    print "Licenses -- " + fileName
+        licenses = scancode.get_licenses(content, _INDEX, _LICENSES_BY_KEY)
+        print "Licenses -- " + fileName
 
-    print "Done -- " + fileName + " time: " + str(time.time() - startTime)
+        print "Done -- " + fileName + " time: " + str(time.time() - startTime)
 
-    scans[location] = {
-        'language': language,
-        'copyrights': copyrights,
-        'licenses': licenses,
-        'authors': authors
-    }
+        scans[location] = {
+            'language': language,
+            'copyrights': copyrights,
+            'licenses': licenses,
+            'authors': authors
+        }
+    except:
+        return 0
 
     return 1
 
@@ -101,8 +103,6 @@ def getFiles(folder, files):
         if file != ".git":
             localPath = folder + '/' + file
             if os.path.isfile(localPath):
-                #type = magic.from_file(localPath, mime=True)
-                #if "text" in type:
                 files.append(localPath)
             elif os.path.isdir(localPath):
                 getFiles(localPath, files)

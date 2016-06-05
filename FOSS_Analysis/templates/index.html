@@ -5,7 +5,7 @@
     <title>FOSS Analizer</title>
     <base href="/">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" charset="utf-8">
-    <link rel="stylesheet" href="/static/bower_components/nvd3/build/nv.d3.css" charset="utf-8">
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/assets/css/style.css" charset="utf-8">
   </head>
   <body ng-app="FOSS_Analysis" ng-strict-di>
@@ -20,16 +20,22 @@
   <script src="/static/bower_components/angular-route/angular-route.min.js" charset="utf-8"></script>
 
   <!-- D3.js -->
-  <script src="/static/bower_components/d3/d3.js"></script>
-  <script src="/static/bower_components/nvd3/build/nv.d3.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js'></script>
 
   <!-- Modules -->
   <script src="/static/components/main/main.module.js" charset="utf-8"></script>
   <script src="/static/components/main/main.controller.js" charset="utf-8"></script>
+  <script src="/static/components/main/services/api.service.js" charset="utf-8"></script>
+
+  <script src="/static/components/statistics/statistics.module.js" charset="utf-8"></script>
+  <script src="/static/components/statistics/statistics.controller.js" charset="utf-8"></script>
+  <script src="/static/components/statistics/directives/statistics.directive.js" charset="utf-8"></script>
+  <script src="/static/components/statistics/directives/all.data.directive.js" charset="utf-8"></script>
+  <script src="/static/components/statistics/directives/user.data.directive.js" charset="utf-8"></script>
 
   <script src="/static/components/analysis/analysis.module.js" charset="utf-8"></script>
   <script src="/static/components/analysis/services/statistics.service.js" charset="utf-8"></script>
-  <script src="/static/components/analysis/services/analysis.service.js" charset="utf-8"></script>
   <script src="/static/components/analysis/analysis.controller.js" charset="utf-8"></script>
   <script src="/static/components/analysis/directives/analysis.directive.js" charset="utf-8"></script>
 
