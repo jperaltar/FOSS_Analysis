@@ -17,23 +17,45 @@
   </div>
   <div class="data">
     <div class="container-fluid row">
-      <percentage></percentage>
-    </div>
-    <div class="container-fluid row">
-      <div class="col-md-6">
-        <chart type="'bar'" graph-data="contributors" graph-width="380" graph-height="200">
-          <svg></svg>
-        </chart>
+      <div class="card col-md-3">
+        <div class="card-header">
+          <h3>Languages in this project</h3>
+        </div>
+        <div class="card-body">
+          <chart type="'pie'" graph-data="language">
+            <svg></svg>
+          </chart>
+        </div>
       </div>
-      <div class="col-md-3">
-        <chart type="'pie'" graph-data="licenses" graph-width="190" graph-height="200">
-          <svg></svg>
-        </chart>
+      <div class="card col-md-3">
+        <div class="card-header">
+          <h3>Contributors participating</h3>
+        </div>
+        <div class="card-body">
+          <chart type="'bar'" graph-data="contributors">
+            <svg></svg>
+          </chart>
+        </div>
       </div>
-      <div class="col-md-3">
-        <chart type="'pie'" graph-data="copyrights" graph-width="190" graph-height="200">
-          <svg></svg>
-        </chart>
+      <div class="card col-md-3">
+        <div class="card-header">
+          <h3>Licenses contained in the files</h3>
+        </div>
+        <div class="card-body">
+          <chart type="'pie'" graph-data="licenses">
+            <svg></svg>
+          </chart>
+        </div>
+      </div>
+      <div class="card col-md-3">
+        <div class="card-header">
+          <h3>Copyrights contained in the files</h3>
+        </div>
+        <div class="card-body">
+          <chart type="'pie'" graph-data="copyrights">
+            <svg></svg>
+          </chart>
+        </div>
       </div>
     </div>
     <div class="container-fluid row">

@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   angular.module('analysis')
-    .controller('AnalysisController', ['$scope', 'ApiService', 'StatisticsService',
-      function ($scope, ApiService, StatisticsService) {
+    .controller('AnalysisController', ['$scope', 'ApiService', 'StatisticsService', 'FormatService',
+      function ($scope, ApiService, StatisticsService, FormatService) {
         $scope.contributors = [];
         $scope.licenses = [];
         $scope.copyrights = [];
@@ -12,6 +12,12 @@
         $scope.files = {};
 
         this.analyze = function () {
+          $scope.contributors = [];
+          $scope.licenses = [];
+          $scope.copyrights = [];
+          $scope.owner = '';
+          $scope.url = '';
+          $scope.num_files = 0;
           ApiService.post('/analyze', {'url': this.url})
             .then(function (data) {
               $scope.files = data['files'];
@@ -26,9 +32,48 @@
                 auxLicenses = StatisticsService.addLicenses(auxLicenses, data['files'][file]);
                 auxCopyrights = StatisticsService.addCopyrights(auxCopyrights, data['files'][file]);
               }
-              $scope.contributors = auxContrib;
-              $scope.licenses = auxLicenses;
-              $scope.copyrights = auxCopyrights;
+
+              FormatService.sortData(auxContrib)
+                .then(function (sortedData) {
+                  FormatService.trimData(8, sortedData)
+                    .then(function (trimedData) {
+                      $scope.contributors = trimedData;
+                    })
+                    .catch(function (data) {
+                      $scope.contributors = data;
+                    });
+                })
+                .catch(function (data) {
+                  $scope.contributors = data;
+                });
+
+              FormatService.sortData(auxLicenses)
+                .then(function (sortedData) {
+                  FormatService.trimData(8, sortedData)
+                    .then(function (trimedData) {
+                      $scope.licenses = trimedData;
+                    })
+                    .catch(function (data) {
+                      $scope.licenses = data;
+                    });
+                })
+                .catch(function (data) {
+                  $scope.licenses = data;
+                });
+
+              FormatService.sortData(auxCopyrights)
+                .then(function (sortedData) {
+                  FormatService.trimData(8, sortedData)
+                    .then(function (trimedData) {
+                      $scope.copyrights = trimedData;
+                    })
+                    .catch(function (data) {
+                      $scope.copyrights = data;
+                    });
+                })
+                .catch(function (data) {
+                  $scope.copyrights = data;
+                });
             })
             .catch(function (err) {
               console.log(err);

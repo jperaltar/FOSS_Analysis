@@ -111,7 +111,7 @@ def scanFolder(repo, location):
     jobs = []
     manager = Manager()
     scans = manager.dict()
-    pool = Pool(2)
+    pool = Pool(4)
 
     startTime = time.time()
     files = []

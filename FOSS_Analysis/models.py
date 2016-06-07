@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -17,6 +18,7 @@ class Project(models.Model):
     name = models.CharField(max_length=128, null=True)
     owner = models.ForeignKey('Contributor', null=True, blank=True, related_name='owner')
     contributors = models.ManyToManyField('Contributor', related_name='contributors')
+    created_at = models.DateTimeField(default=timezone.now, blank=False)
 
 class File(models.Model):
     project = models.ForeignKey('Project', null=True, blank='True')

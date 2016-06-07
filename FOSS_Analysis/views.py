@@ -16,11 +16,50 @@ from git import Repo
 import os.path
 import models
 from django.db.models import Count, Sum
+from datetime import datetime
+from django.utils import timezone
 
 #Helper functions
+def formatFiles(dbFiles):
+    files = {}
+    for file in dbFiles:
+        files[file.path] = {
+            'language': file.language,
+            'authors': {},
+            'copyrights': [],
+            'licenses': []
+        }
+
+        #Add authors
+        blames = models.Blame.objects.filter(file__pk=file.pk)
+        for blame in blames:
+            files[file.path]['authors'][blame.author.login] = {
+                'lines': blame.lines,
+                'email': blame.author.email
+            }
+            if not blame.author.email:
+                files[file.path]['authors'][blame.author.login]['email'] = blame.author.login
+
+
+        #Add copyrights
+        dbCopyrights = []
+        copyrights = file.copyrights.values('name')
+        if len(copyrights) is not 0:
+            for copyright in copyrights:
+                dbCopyrights.append(copyright['name'])
+            files[file.path]['copyrights'].append(dbCopyrights)
+
+        #Add licenses
+        licenses = file.licenses.values('name')
+        for license in licenses:
+            if license['name']:
+                files[file.path]['licenses'].append({'short_name': license['name']})
+
+    return files
+
 def store_contributors(contributors, dbProject, owner):
     for contributor in contributors:
-        models.Contributor.objects.get_or_create(login = contributor['login'],
+        models.Contributor.objects.update_or_create(login = contributor['login'],
                                                 email = contributor['email'],
                                                 defaults = {
                                                     'name': contributor['name'],
@@ -36,16 +75,16 @@ def store_contributors(contributors, dbProject, owner):
 def store_project_contents(scans, dbProject, new_json):
     for path, scan in scans.items():
         new_json['files'][path] = scan
-        models.File.objects.get_or_create(path = path,
+        models.File.objects.update_or_create(path = path,
                                         defaults = {'language': scan['language'],
                                                     'project': dbProject})
         dbFile = models.File.objects.get(path = path)
         for copyright in scan['copyrights']:
-            models.Copyright.objects.get_or_create(name = copyright[0])
+            models.Copyright.objects.update_or_create(name = copyright[0])
             dbCopyright = models.Copyright.objects.get(name = copyright[0])
             dbFile.copyrights.add(dbCopyright)
         for license in scan['licenses']:
-            models.License.objects.get_or_create(name = license['short_name'],
+            models.License.objects.update_or_create(name = license['short_name'],
                                                 owner = license['owner'])
             dbLicense = models.License.objects.get(name = license['short_name'])
             dbFile.licenses.add(dbLicense)
@@ -61,7 +100,7 @@ def store_project_contents(scans, dbProject, new_json):
                     except models.Contributor.DoesNotExist:
                         continue
 
-            models.Blame.objects.get_or_create(file = dbFile,
+            models.Blame.objects.update_or_create(file = dbFile,
                                             author = dbAuthor,
                                             defaults = {'lines': scan['authors'][author]['lines']})
 
@@ -108,32 +147,56 @@ def all(request):
 
         return HttpResponse(json.dumps(new_json))
 
+
+
 def user(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         user = data['user']
 
         #Performs a count for each distinct language by user
-        languages_count = models.Blame.objects.filter(author__login=user).values('file__language').annotate(count=Count('author__login', distinct=True))
+        languages_count = models.Blame.objects.filter(author__login=user).values('file__language').annotate(count=Count('file', distinct=True))
         languages_count = format.count_to_d3_json(languages_count, 'file__language', 'count')
 
         #Performs a search of every project that has the user as contributor
-        projects = models.Project.objects.filter(contributors__login=user).values('name')
-        projects = format.list_to_json_array(projects, 'name')
+        ownedProjects = models.Project.objects.filter(owner__login=user).values('name')
+        collaborations = models.Project.objects.filter(contributors__login=user).values('name')
+        print ownedProjects
+        ownedProjects = format.list_to_json_array(ownedProjects, 'name')
+        collaborations = format.list_to_json_array(collaborations, 'name')
+        print ownedProjects
 
         #Performs a count for each distinct license by user
-        licenses_count = models.Blame.objects.filter(author__login=user).values('file__licenses__name').annotate(count=Count('author__login', distinct=True))
+        licenses_count = models.Blame.objects.filter(author__login=user).values('file__licenses__name').annotate(count=Count('file', distinct=True))
         licenses_count = format.count_to_d3_json(licenses_count, 'file__licenses__name', 'count')
 
         #Performs a count for each distinct copyright by user
-        copyrights_count = models.Blame.objects.filter(author__login=user).values('file__copyrights__name').annotate(count=Count('author__login', distinct=True))
+        copyrights_count = models.Blame.objects.filter(author__login=user).values('file__copyrights__name').annotate(count=Count('file', distinct=True))
         copyrights_count = format.count_to_d3_json(copyrights_count, 'file__copyrights__name', 'count')
 
         new_json = {
             "languages": languages_count,
-            "projects": projects,
+            "projects": {
+                "owned": ownedProjects,
+                "collaborations": collaborations
+            },
             "licenses": licenses_count,
             "copyrights": copyrights_count
+        }
+
+        return HttpResponse(json.dumps(new_json))
+
+def legal(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        copyright = data['copyright']
+        license = data['license']
+
+        dbFiles = models.File.objects.filter(licenses__name__contains=license, copyrights__name__contains=copyright)
+        files = formatFiles(dbFiles)
+
+        new_json = {
+            'files': files
         }
 
         return HttpResponse(json.dumps(new_json))
@@ -152,11 +215,23 @@ def analyze(request):
             'files': {}
         }
 
+        #Compare last update time
+        dbProject, created = models.Project.objects.get_or_create(name=project.repo)
+        lastUpdate = project.getUpdateTime()
+        lastUpdate = datetime.strptime(lastUpdate, '%Y-%m-%dT%H:%M:%SZ')
+        lastUpdate = timezone.make_aware(lastUpdate, timezone.get_default_timezone())
+
+        print dbProject.name
+        print lastUpdate
+        print dbProject.created_at
+        if lastUpdate > dbProject.created_at and not created:
+            dbProject, created = models.Project.objects.update(name=project.repo)
+            created = True
+
         #Store project
-        dbProject, created = models.Project.objects.get_or_create(name = project.repo)
+        print created
         if created:
             new_json['created'] = True
-            dbProject = models.Project.objects.get(name = project.repo)
 
             #Store contributors
             contributors = project.getContributors()
@@ -178,40 +253,8 @@ def analyze(request):
 
         else:
             dbFiles = models.File.objects.filter(project=dbProject)
-            files = {}
             new_json['num_files'] = len(dbFiles)
-            for file in dbFiles:
-                files[file.path] = {
-                    'language': file.language,
-                    'authors': {},
-                    'copyrights': [],
-                    'licenses': []
-                }
-
-                #Add authors
-                blames = models.Blame.objects.filter(file__pk=file.pk)
-                for blame in blames:
-                    files[file.path]['authors'][blame.author.login] = {
-                        'lines': blame.lines,
-                        'email': blame.author.email
-                    }
-                    if not blame.author.email:
-                        files[file.path]['authors'][blame.author.login]['email'] = blame.author.login
-
-
-                #Add copyrights
-                dbCopyrights = []
-                copyrights = file.copyrights.values('name')
-                if len(copyrights) is not 0:
-                    for copyright in copyrights:
-                        dbCopyrights.append(copyright['name'])
-                    files[file.path]['copyrights'].append(dbCopyrights)
-
-                #Add licenses
-                licenses = file.licenses.values('name')
-                for license in licenses:
-                    if license['name']:
-                        files[file.path]['licenses'].append({'short_name': license['name']})
+            files = formatFiles(dbFiles)
 
             new_json['files'] = files
 

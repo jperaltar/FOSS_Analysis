@@ -6,9 +6,6 @@
         var service = {};
 
         service.post = function (url, data) {
-          console.log(data);
-          $('chart > *').remove();
-          $('chart').append('<svg></svg>');
           var deferred = $q.defer();
           $http({
             method: 'POST',

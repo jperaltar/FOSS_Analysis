@@ -12,6 +12,7 @@
 
   app.config(['$httpProvider',
     function($httpProvider) {
+      $httpProvider.interceptors.push('interceptors');
       $httpProvider.defaults.xsrfCookieName = 'csrftoken';
       $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     }

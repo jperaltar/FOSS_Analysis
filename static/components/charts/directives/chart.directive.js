@@ -29,8 +29,6 @@
                     key: 'Cumulative Return',
                     values: graphData
                   }];
-                  console.log('BAR CHART');
-                  console.log(graphData);
                   chart = nv.models.discreteBarChart()
                     .x(function(d) { return d.label })
                     .y(function(d) { return d.value })
@@ -39,13 +37,12 @@
                   scope.$emit('chartinit');
                   break;
                 case 'pie':
-                  console.log('PIE CHART');
-                  console.log(graphData);
                   chart = nv.models.pieChart()
                     .x(function(d) { return d.label })
                     .y(function(d) { return d.value })
-                    .showLegend(false)
-                    .showLabels(false);
+                    .showLegend(true)
+                    .showLabels(true)
+                    .labelType("percent");
                   scope.$emit('chartinit');
                   break;
               }

@@ -1,3 +1,20 @@
 #navbar-list {
   margin-right: 0px;
 }
+
+.card {
+  text-align: center;
+  width: 48%;
+  height: 400px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 1%;
+  margin-right: 1%;
+  border: 1px solid #0F0F0F;
+  border-radius: 8px;
+}
+
+.card-body {
+  text-align: left;
+  height: 80%;
+}

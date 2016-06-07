@@ -1,24 +1,46 @@
 <div class="data">
   <div class="container-fluid row">
-    <div class="col-md-3">
-      <chart type="'pie'" graph-data="languages" graph-width="190" graph-height="200">
-        <svg></svg>
-      </chart>
+    <div class="card col-md-6">
+      <div class="card-header">
+        <h3>Most used languages</h3>
+      </div>
+      <div class="card-body">
+        <chart type="'pie'" graph-data="languages">
+          <svg></svg>
+        </chart>
+      </div>
     </div>
-    <div class="col-md-3">
-      <chart type="'bar'" graph-data="contributors" graph-width="190" graph-height="200">
-        <svg></svg>
-      </chart>
+    <div class="card col-md-6">
+      <div class="card-header">
+        <h3>Most active contributors</h3>
+      </div>
+      <div class="card-body">
+        <chart type="'bar'" graph-data="contributors">
+          <svg></svg>
+        </chart>
+      </div>
     </div>
-    <div class="col-md-3">
-      <chart type="'pie'" graph-data="licenses" graph-width="190" graph-height="200">
-        <svg></svg>
-      </chart>
+  </div>
+  <div class="container-fluid row">
+    <div class="card col-md-6">
+      <div class="card-header">
+        <h3>Most used licenses</h3>
+      </div>
+      <div class="card-body">
+        <chart type="'pie'" graph-data="licenses">
+          <svg></svg>
+        </chart>
+      </div>
     </div>
-    <div class="col-md-3">
-      <chart type="'pie'" graph-data="copyrights" graph-width="190" graph-height="200">
-        <svg></svg>
-      </chart>
+    <div class="card col-md-6">
+      <div class="card-header">
+        <h3>Most used copyrights</h3>
+      </div>
+      <div class="card-body">
+        <chart type="'pie'" graph-data="copyrights">
+          <svg></svg>
+        </chart>
+      </div>
     </div>
   </div>
 </div>

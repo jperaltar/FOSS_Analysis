@@ -5,7 +5,7 @@
     <title>FOSS Analizer</title>
     <base href="/">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" charset="utf-8">
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.3/nv.d3.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/assets/css/style.css" charset="utf-8">
   </head>
   <body ng-app="FOSS_Analysis" ng-strict-di>
@@ -21,12 +21,13 @@
 
   <!-- D3.js -->
   <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.3/nv.d3.min.js'></script>
 
   <!-- Modules -->
   <script src="/static/components/main/main.module.js" charset="utf-8"></script>
   <script src="/static/components/main/main.controller.js" charset="utf-8"></script>
   <script src="/static/components/main/services/api.service.js" charset="utf-8"></script>
+  <script src="/static/components/main/services/interceptor.js" charset="utf-8"></script>
 
   <script src="/static/components/statistics/statistics.module.js" charset="utf-8"></script>
   <script src="/static/components/statistics/statistics.controller.js" charset="utf-8"></script>
@@ -41,6 +42,7 @@
 
   <script src="/static/components/charts/charts.module.js" charset="utf-8"></script>
   <script src="/static/components/charts/directives/chart.directive.js" charset="utf-8"></script>
+  <script src="/static/components/charts/services/format.service.js" charset="utf-8"></script>
 
   <!-- Main App -->
   <script src="/static/app.module.js" charset="utf-8"></script>
