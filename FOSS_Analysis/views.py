@@ -72,6 +72,7 @@ def store_contributors(contributors, dbProject, owner):
         else:
             dbProject.contributors.add(dbContrib)
 
+
 def store_project_contents(scans, dbProject, new_json):
     for path, scan in scans.items():
         new_json['files'][path] = scan
@@ -96,7 +97,7 @@ def store_project_contents(scans, dbProject, new_json):
                     dbAuthor = models.Contributor.objects.get(login = author)
                 except models.Contributor.DoesNotExist:
                     try:
-                        dbAuthor = models.Contributor.objects.get(name__contains = author)
+                        dbAuthor = models.Contributor.objects.get(name = author)
                     except models.Contributor.DoesNotExist:
                         continue
 
@@ -105,6 +106,8 @@ def store_project_contents(scans, dbProject, new_json):
                                             defaults = {'lines': scan['authors'][author]['lines']})
 
 # VIEWS
+
+
 @ensure_csrf_cookie
 def main(request):
     if request.method == 'GET':
@@ -120,6 +123,7 @@ def main(request):
 
         return HttpResponse(template.render(context, request))
 
+
 def all(request):
     if request.method == 'POST':
         #Performs a count for each distinct copyright
@@ -134,7 +138,7 @@ def all(request):
         languages_count = models.File.objects.values('language').annotate(count=Count('path', distinct=True))
         languages_count = format.count_to_d3_json(languages_count, 'language', 'count')
 
-        #Performs a count for each distinct language
+        #Performs a count for each contributors lines
         contributions_count = models.Blame.objects.values('author__login').annotate(count=Sum('lines', distinct=True))
         contributions_count = format.count_to_d3_json(contributions_count, 'author__login', 'count')
 
@@ -146,7 +150,6 @@ def all(request):
         }
 
         return HttpResponse(json.dumps(new_json))
-
 
 
 def user(request):
@@ -161,10 +164,8 @@ def user(request):
         #Performs a search of every project that has the user as contributor
         ownedProjects = models.Project.objects.filter(owner__login=user).values('name')
         collaborations = models.Project.objects.filter(contributors__login=user).values('name')
-        print ownedProjects
         ownedProjects = format.list_to_json_array(ownedProjects, 'name')
         collaborations = format.list_to_json_array(collaborations, 'name')
-        print ownedProjects
 
         #Performs a count for each distinct license by user
         licenses_count = models.Blame.objects.filter(author__login=user).values('file__licenses__name').annotate(count=Count('file', distinct=True))
@@ -186,6 +187,7 @@ def user(request):
 
         return HttpResponse(json.dumps(new_json))
 
+
 def legal(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -200,6 +202,7 @@ def legal(request):
         }
 
         return HttpResponse(json.dumps(new_json))
+
 
 def analyze(request):
     if request.method == 'POST':
@@ -221,12 +224,12 @@ def analyze(request):
         lastUpdate = datetime.strptime(lastUpdate, '%Y-%m-%dT%H:%M:%SZ')
         lastUpdate = timezone.make_aware(lastUpdate, timezone.get_default_timezone())
 
-        print dbProject.name
-        print lastUpdate
-        print dbProject.created_at
-        if lastUpdate > dbProject.created_at and not created:
-            dbProject, created = models.Project.objects.update(name=project.repo)
-            created = True
+        # print dbProject.name
+        # print lastUpdate
+        # print dbProject.created_at
+        # if lastUpdate > dbProject.created_at and not created:
+        #     dbProject = models.Project.objects.filter(name=project.repo).update(created_at=datetime.now())
+        #     created = True
 
         #Store project
         print created
@@ -257,6 +260,5 @@ def analyze(request):
             files = formatFiles(dbFiles)
 
             new_json['files'] = files
-
 
         return HttpResponse(json.dumps(new_json))

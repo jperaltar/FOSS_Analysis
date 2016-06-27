@@ -22,7 +22,7 @@
           <h3>Languages in this project</h3>
         </div>
         <div class="card-body">
-          <chart type="'pie'" graph-data="language">
+          <chart type="'pie'" graph-data="languages">
             <svg></svg>
           </chart>
         </div>
@@ -82,7 +82,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="(key, value) in files">
-            <td>{{key}}</td>
+            <td class="file-name">{{key}}</td>
             <td>{{value.language}}</td>
             <td>
               <ul>

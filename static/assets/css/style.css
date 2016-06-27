@@ -1,8 +1,13 @@
+body {
+  background-color: rgb(206, 203, 251);
+}
+
 #navbar-list {
   margin-right: 0px;
 }
 
 .card {
+  background-color: rgb(237, 254, 241);
   text-align: center;
   width: 48%;
   height: 400px;
@@ -15,6 +20,21 @@
 }
 
 .card-body {
+  background-color: rgb(255, 255, 255);
   text-align: left;
   height: 80%;
+  border: 1px solid rgba(33, 33, 33, 0.58);
+  border-radius: 8px;
+}
+
+table {
+  text-align: center;
+}
+
+table .file-name{
+  max-width: 550px;
+}
+
+table td {
+  overflow-x: auto;  
 }

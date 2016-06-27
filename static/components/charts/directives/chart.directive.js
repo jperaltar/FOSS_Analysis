@@ -37,6 +37,7 @@
                   scope.$emit('chartinit');
                   break;
                 case 'pie':
+                  console.log(graphData);
                   chart = nv.models.pieChart()
                     .x(function(d) { return d.label })
                     .y(function(d) { return d.value })

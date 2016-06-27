@@ -62,6 +62,23 @@
           return copyrights;
         }
 
+        service.addLanguages = function (languages, file) {
+          for (var j = 0; j < languages.length; j++) {
+            if (languages[j].label == file.language) {
+              languages[j].value += 1;
+              break;
+            }
+          }
+          if (j > (languages.length - 1) && file.language) {
+            var language = {
+              'label': file.language,
+              'value': 1
+            };
+            languages.push(language);
+          }
+          return languages;
+        }
+
         return service;
       }
     ]);

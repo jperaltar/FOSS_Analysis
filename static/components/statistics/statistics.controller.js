@@ -3,6 +3,7 @@
   angular.module('statistics')
     .controller('StatisticsController', ['$scope', 'ApiService', 'FormatService',
       function ($scope, ApiService, FormatService) {
+        $scope.files = [];
         $scope.contributors = [];
         $scope.licenses = [];
         $scope.copyrights = [];
@@ -154,13 +155,16 @@
         }
 
         this.getByLegalInfo = function () {
+          $scope.files = [];
           ApiService.post('/legal', {
             license: this.license || '',
             copyright: this.copyright || ''
           })
             .then(function (response) {
               $scope.selectedInfo = '';
+              console.log(response['files']);
               $scope.files = response['files'];
+              
               $scope.selectedInfo = 'legal';
             })
             .catch(function (err) {
